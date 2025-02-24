@@ -6,7 +6,7 @@ body, html, #root {
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 100vw;
   height: 100vh;
@@ -29,7 +29,6 @@ body, html, #root {
 }
 
 .title-card {
-  padding-top: 2%;
   padding-left: 5%;
   width: 100%;
   display: flex;
@@ -58,13 +57,18 @@ body, html, #root {
 }
 
 .container {
+  min-width: 500px;
   max-width: 600px;
+  min-height: 300px;
   margin: 50px auto;
   padding: 20px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px #0000001a;
   animation: hover 4s ease infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures input is at the bottom */
 }
 
 @keyframes hover {
@@ -80,37 +84,52 @@ body, html, #root {
 }
 
 .scroll-area {
-  height: 400px;
-  overflow-y: scroll;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1; /* Makes this area take up all available space */
+  overflow-y: auto; /* Scrollable if the content overflows */
   border-bottom: 1px solid #ddd;
 }
 
+.scroll-area .message.user {
+  align-self: flex-end; /* Moves user messages to the right */
+}
+
+
 .message {
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 15px;
+  display: inline-block; /* Makes container wrap tightly */
   max-width: 80%;
   word-wrap: break-word;
+  word-break: break-word; /* Ensures long words break */
 }
 
 .message.user {
-  background-color: #73b7ff;
+  border: solid 3px #006bde;
+  color: #007bff;
   text-align: right;
+  align-self: flex-end;
 }
 
 .message.assistant {
-  background-color: #818181;
+  background-color: #30c4ff;
   text-align: left;
+  align-self: flex-start;
 }
 
 .input-group {
-  margin-top: 20px;
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
+  margin-top: 20px;
+  width: 100%; /* Ensure it takes full width of the container */
 }
 
-.input-group:focus{
+.input-group input:focus {
   outline: none;
 }
 
@@ -119,17 +138,19 @@ body, html, #root {
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  color: #004690;
+  border: none;
+  color: #006bde;
 }
 
 .input-group button {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background-color: #ffffff;
+  border: solid 5px #007bff;
+  color: #007bff;
+  border-radius: 15px;
   cursor: pointer;
+  transition: 0.25s ease;
+  font-weight: 600;
 }
 
 .input-group button:disabled {
@@ -138,5 +159,6 @@ body, html, #root {
 }
 
 .input-group button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #007bff;
+  color: #ffffff;
 }

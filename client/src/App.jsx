@@ -54,7 +54,7 @@ function App() {
             placeholder="Type a message..."
           />
           <button onClick={sendMessage} disabled={loading}>
-            {loading ? "Sending..." : "Send"}
+            {loading ? "Prompting..." : "Prompt"}
           </button>
         </div>
       </div>

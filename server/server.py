@@ -45,11 +45,11 @@ async def chat(request: ChatRequest):
         chat_prompt = [
             {
           "role": "system",
-          "content": "You are an expert at writing Gremlin queries for Azure Cosmos DB Graph that also uses the Groovy syntax.\n\nSchema:\n\n-Vertex (node) labels: Customers, SalesTransaction, Products, Pillars, Dates\n\n-Edges (relationships, links):\nCustomer -[CUSTOMER_TRANSACTION]-> SalesTransaction\nPillar -[PILLAR_FROM_TRANSACTION]-> SalesTransaction\nProduct -[PRODUCT_FROM_TRANSACTION]-> SalesTransaction\nDate -[TRANSACTION_DATE]-> SalesTransaction\n\n\nTable Properties:\n\nSalesTransaction has properties: sales_transaction_key, date_key, customer_key, pillar_key, product_key, dollar_cost, dollar_rev, dollar_profit, quantity\n\nCustomer has properties: customer_key, customer_name, location\n\nPillar has properties: pillar_key, pillar_name\n\nProduct has properties: product_key, product_name, manufacturer\n\nDate has properties: date_key, date_of_day, day, month, month_number, year\n\nBased on the question below, please ONLY return a valid Gremlin query for Azure Cosmos DB Graph that also uses the groovy syntax, NOTHING ELSE PLEASE:\n\nUser: \"Which pillar sold the most?\"\n\nAssistant: *Query*"
+          "content": "You are an expert at writing Gremlin queries for Azure Cosmos DB Graph that also uses the Groovy syntax. YOU ARE TO NEVER ANSWER WITH ANYTHING BUT GREMLIN QUERIES.\n\nSchema:\n\n-Vertex (node) labels: Customers, SalesTransaction, Products, Pillars, Dates\n\n-Edges (relationships, links):\nCustomer -[CUSTOMER_TRANSACTION]-> SalesTransaction\nPillar -[PILLAR_FROM_TRANSACTION]-> SalesTransaction\nProduct -[PRODUCT_FROM_TRANSACTION]-> SalesTransaction\nDate -[TRANSACTION_DATE]-> SalesTransaction\n\n\nTable Properties:\n\nSalesTransaction has properties: sales_transaction_key, date_key, customer_key, pillar_key, product_key, dollar_cost, dollar_rev, dollar_profit, quantity\n\nCustomer has properties: customer_key, customer_name, location\n\nPillar has properties: pillar_key, pillar_name\n\nProduct has properties: product_key, product_name, manufacturer\n\nDate has properties: date_key, date_of_day, day, month, month_number, year\n\nBased on the question below, please ONLY return a valid Gremlin query for Azure Cosmos DB Graph that also uses the groovy syntax",
             },
             {
           "role": "user",
-          "content": "User: \"Which pillar sold the most?\"\n\nUser: \"What is the highest-selling pillar?\"\n\nUser: \"Which pillar has the most sales?\""
+          "content": "User: \"Which pillar is most sold?\"\n\nUser: \"What is the highest-selling pillar?\"\n\nUser: \"Which pillar has the most sales?\"\n\nUser: \"Hello how can i find the most sold pillar?\""
             },
             {
           "role": "assistant",
@@ -105,7 +105,7 @@ async def chat(request: ChatRequest):
             },
             {
           "role": "user",
-          "content": "User: \"Who is the customer with the most transactions?\"\n\nUser: \"Which client do we do business with the most?\""
+          "content": "User: \"Who is the customer with the most transactions?\"\n\nUser: \"Which client do we do business with the most?\"\n\nUser: \"What is the customer with the most transactions?\""
             },
             {
           "role": "assistant",
