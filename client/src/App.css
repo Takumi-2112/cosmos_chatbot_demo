@@ -1,15 +1,60 @@
-/* Global styles */
 body, html, #root {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #000000;
   color: #ffffff;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  background: linear-gradient(300deg, #d3edff, #60c4ec, #ffffff);
+  background-size: 170% 100%;
+  animation: gradient-animation 10s ease infinite;
+  z-index: -99;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.title-card {
+  padding-top: 2%;
+  padding-left: 5%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px; 
+}
+
+.iti-pic{
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 0 5px #000000);
+}
+
+.title-h1{
+  color: #ffffff;
+  text-align: center;
+  font-style: italic;
+  font-family: 'Exo 2', sans-serif;
+  filter: drop-shadow(0 0 5px #000000);
+  margin-right: 10%;
+}
+
+.hide{
+  color: #00000000;
 }
 
 .container {
@@ -19,6 +64,19 @@ body, html, #root {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px #0000001a;
+  animation: hover 4s ease infinite;
+}
+
+@keyframes hover {
+  0% {
+    transform: translateY(3px);
+  }
+  50% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(3px);
+  }
 }
 
 .scroll-area {

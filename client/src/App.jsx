@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import ITI from "./assets/ITI.png";
 
 const API_URL = "http://localhost:8000/chat";
 
@@ -32,25 +33,32 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <div className="scroll-area">
-        {messages.map((msg, index) => (
-          <div key={index} className={`message ${msg.role}`}>
-            {msg.content}
-          </div>
-        ))}
+    <>
+      <div className="title-card">
+        <img className="iti-pic" src={ITI} alt="" />
+        <h1 className="title-h1">ITI GraphRAG Bot 3000</h1>
+        <h1 className="hide">k</h1>
       </div>
-      <div className="input-group">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMessage} disabled={loading}>
-          {loading ? "Sending..." : "Send"}
-        </button>
+      <div className="container">
+        <div className="scroll-area">
+          {messages.map((msg, index) => (
+            <div key={index} className={`message ${msg.role}`}>
+              {msg.content}
+            </div>
+          ))}
+        </div>
+        <div className="input-group">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a message..."
+          />
+          <button onClick={sendMessage} disabled={loading}>
+            {loading ? "Sending..." : "Send"}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
