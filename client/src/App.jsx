@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import ITI from "./assets/ITI.png";
 
-const API_URL = "http://localhost:8000/chat";
+const API_URL = "http://localhost:8000/chat_and_query";
 
 function App() {
   const [messages, setMessages] = useState([
