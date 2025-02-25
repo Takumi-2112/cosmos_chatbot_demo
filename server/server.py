@@ -1,11 +1,10 @@
-import os
 import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import AzureOpenAI, OpenAIError
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-from config import AI_FOUNDRY_ENDPOINT, AI_FOUNDRY_DEPLOYMENT, AI_FOUNDRY_SUBSCRIPTION_KEY
+from config import AI_FOUNDRY_ENDPOINT, AI_FOUNDRY_DEPLOYMENT, AI_FOUNDRY_KEY
 
 app = FastAPI()
 
@@ -25,7 +24,7 @@ logger = logging.getLogger(__name__)
 # Azure AI Foundry Configuration
 ENDPOINT = AI_FOUNDRY_ENDPOINT  # Azure AI Foundry endpoint
 DEPLOYMENT = AI_FOUNDRY_DEPLOYMENT  # Azure AI Foundry deployment
-subscription_key = AI_FOUNDRY_SUBSCRIPTION_KEY  # Azure AI Foundry subscription key
+subscription_key = AI_FOUNDRY_KEY  # Azure AI Foundry subscription key
 
 # Initialize the Azure OpenAI client with subscription key-based authentication
 client = AzureOpenAI(

@@ -10,9 +10,9 @@ body, html, #root {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(300deg, #d3edff, #60c4ec, #ffffff);
+  background: linear-gradient(300deg, #60c4ec, #007bff, #ffffff); 
   background-size: 170% 100%;
-  animation: gradient-animation 10s ease infinite;
+  animation: gradient-animation 20s ease infinite;
   z-index: -99;
 }
 
@@ -46,8 +46,9 @@ body, html, #root {
 .title-h1{
   color: #ffffff;
   text-align: center;
-  font-style: italic;
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Fredoka', cursive;
+  font-size: 3em;
+  letter-spacing: 0.6rem;
   filter: drop-shadow(0 0 5px #000000);
   margin-right: 10%;
 }
