@@ -6,7 +6,11 @@ const API_URL = "http://localhost:8000/chat_and_query";
 
 function App() {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hello! How can I assist you today?" },
+    {
+      role: "assistant",
+      content:
+        "Welcome back Mr. Azran. How may I be of assistance to you in your database today?",
+    },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,7 +29,13 @@ function App() {
         body: JSON.stringify({ messages: newMessages }),
       });
       const data = await response.json();
-      setMessages([...newMessages, { role: "assistant", content: data.reply }]);
+      setMessages([
+        ...newMessages,
+        {
+          role: "assistant",
+          content: JSON.stringify(data.query_result, null, 2),
+        },
+      ]);
     } catch (error) {
       console.error("Error fetching response:", error.message);
     }
@@ -51,7 +61,7 @@ function App() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
+            placeholder="Enter your prompt here..."
           />
           <button onClick={sendMessage} disabled={loading}>
             {loading ? "Prompting..." : "Prompt"}
