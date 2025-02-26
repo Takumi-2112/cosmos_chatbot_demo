@@ -119,6 +119,8 @@ body, html, #root {
   background-color: #30c4ff;
   text-align: left;
   align-self: flex-start;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .input-group {

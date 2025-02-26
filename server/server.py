@@ -1,4 +1,5 @@
 import logging
+import traceback
 import asyncio
 import certifi
 import ssl
@@ -10,7 +11,7 @@ from azure.identity import DefaultAzureCredential
 from gremlin_python.driver import client, serializer
 from config import (
     AI_FOUNDRY_ENDPOINT, AI_FOUNDRY_DEPLOYMENT, AI_FOUNDRY_KEY,
-    COSMOS_DB_ENDPOINT, COSMOS_DB_DATABASE, COSMOS_DB_GRAPH, COSMOS_DB_PRIMARY_KEY
+    COSMOS_DB_ENDPOINT, COSMOS_DB_DATABASE, COSMOS_DB_GRAPH, COSMOS_DB_SECONDARY_KEY
 )
 
 app = FastAPI()
@@ -25,7 +26,7 @@ app.add_middleware(
 )
 
 # Configure logging
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Initialize Azure AI Foundry (OpenAI)
@@ -43,10 +44,19 @@ gremlin_client = client.Client(
     COSMOS_DB_ENDPOINT, 
     'g',
     username=f"/dbs/{COSMOS_DB_DATABASE}/colls/{COSMOS_DB_GRAPH}",
-    password=COSMOS_DB_PRIMARY_KEY,
+    password=COSMOS_DB_SECONDARY_KEY,
     message_serializer=serializer.GraphSONSerializersV2d0(),
     ssl_context=ssl_context
 )
+
+# dont mind this mild debugging code 
+logger.debug(f"AI_FOUNDRY_ENDPOINT: {AI_FOUNDRY_ENDPOINT}")
+logger.debug(f"AI_FOUNDRY_DEPLOYMENT: {AI_FOUNDRY_DEPLOYMENT}")
+logger.debug(f"AI_FOUNDRY_KEY: {AI_FOUNDRY_KEY}")
+logger.debug(f"COSMOS_DB_ENDPOINT: {COSMOS_DB_ENDPOINT}")
+logger.debug(f"COSMOS_DB_DATABASE: {COSMOS_DB_DATABASE}")
+logger.debug(f"COSMOS_DB_GRAPH: {COSMOS_DB_GRAPH}")
+logger.debug(f"COSMOS_DB_SECONDARY_KEY: {COSMOS_DB_SECONDARY_KEY}")
 
 # Request model for chat messages
 class ChatRequest(BaseModel):
@@ -80,7 +90,7 @@ async def run_gremlin_query(query: str):
         return processed_result
 
     except Exception as e:
-        logger.error(f"Error executing Gremlin query: {e}")
+        logger.error(f"👹👹Error executing Gremlin query origin from run_gremlin_query function: {e}\n{traceback.format_exc()}")
         return []
 
 
@@ -89,6 +99,14 @@ async def generate_gremlin_query(request: ChatRequest):
     Calls Azure AI Foundry to generate a Gremlin query based on the user's request.
     """
     try:
+      
+        query_sharpener = {
+          "role": "user",
+          "content": "*Search your chat_prompt array to extract the correct query, or use it as context to help you come up with the correct query*"
+        }
+        
+        request.messages.append(query_sharpener)
+      
         chat_prompt = [
             {
           "role": "system",
@@ -96,7 +114,7 @@ async def generate_gremlin_query(request: ChatRequest):
             },
             {
           "role": "user",
-          "content": "User: \"Which pillar is most sold?\"\n\nUser: \"What is the highest-selling pillar?\"\n\nUser: \"Which pillar has the most sales?\"\n\nUser: \"Hello how can i find the most sold pillar?\""
+          "content": "User: \"Which pillar is most sold?\"\n\nUser: \"What is the highest-selling pillar?\"\n\nUser: \"id like to know which pillar is most sold\"\n\nUser: \"Which pillar has the most sales?\"\n\nUser: \"Hello how can i find the most sold pillar?\""
             },
             {
           "role": "assistant",
@@ -104,7 +122,7 @@ async def generate_gremlin_query(request: ChatRequest):
             },
             {
           "role": "user",
-          "content": "User: \"Show all customer transactions with the respective sales transactions.\"\n\nUser: \"What are all the customer transactions along with their sales transaction?\""
+          "content": "User: \"I wish to see all the customers and their transactions\"\n\nUser: \"Show all customer transactions with the respective sales transactions\"\n\nUser: \"Show me a list of all customer transactions with the respective sales transactions\"\n\nUser: \"What are all the customer transactions along with their sales transaction?\"\n\nUser: \"Please give me a list of all the customers with their transactions\""
             },
             {
           "role": "assistant",
@@ -117,6 +135,14 @@ async def generate_gremlin_query(request: ChatRequest):
             {
           "role": "assistant",
           "content": "g.E().hasLabel('CUSTOMER_TRANSACTION')\n  .groupCount().by(outV().values('location'))\n  .order(local).by(values, decr).limit(local, 1)"
+            },
+            {
+          "role": "user",
+          "content": "User: \"Show me a list of all the cities in our database\"\n\nUser: \"Which cities do we have access to?\"\n\nUser: \"Which cities can we do business with\"\n\nUser: \"Provide me with a list of all the cities in our db\"\n\nUser: \"What are the cities in our db?\""
+            },
+            {
+          "role": "assistant",
+          "content": "g.V().hasLabel('Customer')\n  .values('location')\n  .dedup()"
             },
             {
           "role": "user",
@@ -166,8 +192,8 @@ async def generate_gremlin_query(request: ChatRequest):
         response = client_ai.chat.completions.create(
             model=AI_FOUNDRY_DEPLOYMENT,
             messages=chat_prompt,
-            max_tokens=300,
-            temperature=0.5
+            max_tokens=800,
+            temperature=0
         )
 
         # Debugging: log the AI Foundry response
@@ -181,10 +207,10 @@ async def generate_gremlin_query(request: ChatRequest):
 
         return gremlin_query
     except OpenAIError as e:
-        logger.error(f"Azure AI Foundry API error: {e}")
+        logger.error(f"🤖🤖Azure AI Foundry API error originating in generate_gremlin_query function: {e}\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Azure AI Foundry API error.")
     except Exception as e:
-        logger.error(f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {e}\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Internal server error.")
 
 @app.post("/chat_and_query")
@@ -208,5 +234,5 @@ async def chat_and_query(request: ChatRequest):
     except HTTPException as e:
         raise e  # If AI Foundry or Gremlin fails, return error
     except Exception as e:
-        logger.error(f"Unexpected error: {e}")
+        logger.error(f"❌❌chat_and_query function execution error: {e}\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Internal server error.")

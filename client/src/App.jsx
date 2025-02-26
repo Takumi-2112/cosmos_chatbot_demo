@@ -21,7 +21,7 @@ function App() {
     setMessages(newMessages);
     setInput("");
     setLoading(true);
-
+  
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -29,12 +29,14 @@ function App() {
         body: JSON.stringify({ messages: newMessages }),
       });
       const data = await response.json();
+  
+      // Format the query result into a readable string
+      const formattedResult = JSON.stringify(data.query_result, null, 2);
+  
+      // Add the formatted result as the assistant's response
       setMessages([
         ...newMessages,
-        {
-          role: "assistant",
-          content: JSON.stringify(data.query_result, null, 2),
-        },
+        { role: "assistant", content: formattedResult },
       ]);
     } catch (error) {
       console.error("Error fetching response:", error.message);
@@ -66,10 +68,4 @@ function App() {
           <button onClick={sendMessage} disabled={loading}>
             {loading ? "Prompting..." : "Prompt"}
           </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export default App;
+  
