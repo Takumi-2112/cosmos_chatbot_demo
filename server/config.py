@@ -1,0 +1,12 @@
+import os 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+AI_FOUNDRY_ENDPOINT = os.getenv("AI_FOUNDRY_ENDPOINT")
+AI_FOUNDRY_DEPLOYMENT = os.getenv("AI_FOUNDRY_DEPLOYMENT")
+AI_FOUNDRY_KEY = os.getenv("AI_FOUNDRY_KEY")
+COSMOS_DB_ENDPOINT = os.getenv("COSMOS_DB_ENDPOINT")
+COSMOS_DB_DATABASE = os.getenv("COSMOS_DB_DATABASE")
+COSMOS_DB_GRAPH = os.getenv("COSMOS_DB_GRAPH")
+COSMOS_DB_PRIMARY_KEY = os.getenv("COSMOS_DB_PRIMARY_KEY")
